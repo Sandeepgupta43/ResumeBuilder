@@ -134,6 +134,14 @@ const ResumeTemplate = ({ userData }) => (
           ))}
         </View>
       )}
+      {userData.extracurriculars.length > 0 && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>EXTRACURRUCULARS</Text>
+          {userData.extracurriculars.map((extr,i) => (
+            <Text key={i}>• {extr.role} {' '} {extr.organization} {' '} {extr.startDate} {' '} {extr.endDate}</Text>
+          ))}
+        </View>
+      )}
     </Page>
   </Document>
 );

@@ -3,7 +3,7 @@ import { createContext, useState } from "react";
 export const CustomUserContext = createContext();
 
 export const CustomUserProvider = ({ children }) => {
-  const [customUserData, setUserData] = useState({
+  const [customUserData, setCustomUserData] = useState({
     name: "",
     email: "",
     phone: "",
@@ -20,7 +20,7 @@ export const CustomUserProvider = ({ children }) => {
   });
 
   return (
-    <CustomUserContext.Provider value={{ customUserData, setUserData }}>
+    <CustomUserContext.Provider value={{ customUserData, setCustomUserData }}>
       {children}
     </CustomUserContext.Provider>
   );

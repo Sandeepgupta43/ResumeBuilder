@@ -1,8 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { GoogleGenAI } from "@google/genai";
-import { UserContext } from '../context/UserContext';
 import { CustomUserContext } from '../context/CustomUserContext';
-import CustomMyPdf from '../PdfFile/CustomMyPdf';
+import WorkExperience from '../components/WorkExperience';
+import Projects from '../components/Projects';
+import Education from '../components/Education';
+import MyPdf from '../PdfFile/MyPdf';
+import Extracurriculars from '../components/Extracurriculars';
+import Certifications from '../components/Certifications';
+import PersonalDetails from '../components/PersonalDetails';
+import Skills from '../components/Skills';
 
 const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_Api_key });
 
@@ -13,9 +19,10 @@ function CustomJob() {
     const [improvementSummary, setImprovementSummary] = useState('');
     const [userData, setUserData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [isVisible,setIsVisible] = useState(false);
 
     
-    const { setUserData: setCustomUserData, customUserData } = useContext(CustomUserContext);
+    const { setCustomUserData, customUserData } = useContext(CustomUserContext);
 
     useEffect(() => {
     const data = localStorage.getItem("userData");
@@ -66,55 +73,76 @@ function CustomJob() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsLoading(true);
-        setResult('');
-        setImprovementSummary('');
+    e.preventDefault();
+    setIsLoading(true);
+    setResult('');
+    setImprovementSummary('');
+
+    const validationErrors = validate();
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {
+        setIsLoading(false);
+        return;
+    }
+
+    try {
+        const query = `${customPrompt}\nResume: ${JSON.stringify(userData)}\nJob Description: ${input.trim()}`;
         
-        const validationErrors = validate();
-        setErrors(validationErrors);
+        const response = await ai.models.generateContent({
+            model: "gemini-2.0-flash",
+            contents: [{ role: "user", parts: [{ text: query }] }]
+        });
 
-        if (Object.keys(validationErrors).length > 0) {
-            setIsLoading(false);
-            return;
-        }
-
-        try {
-            const query = `${customPrompt}\nResume: ${JSON.stringify(userData)}\nJob Description: ${input.trim()}`;
+        let rawText = response.text;
+        setResult(rawText);
+        
+        // Improved parsing logic
+        const extractFromResponse = (text) => {
+            // Try to extract between XML-like tags first
+            const summaryMatch = text.match(/<ImprovementSummary>([\s\S]*?)<\/ImprovementSummary>/i);
+            const jsonMatch = text.match(/<ImprovedResumeJSON>([\s\S]*?)<\/ImprovedResumeJSON>/i);
             
-            const response = await ai.models.generateContent({
-                model: "gemini-2.0-flash",
-                contents: [{ role: "user", parts: [{ text: query }] }]
-            });
-
-            const rawText = response.text;
-            setResult(rawText);
-            console.log("Raw AI Response:", rawText);
-
-            const { summary, json } = extractSections(rawText);
+            // Fallback to looking for JSON directly
+            const jsonStart = text.indexOf('{');
+            const jsonEnd = text.lastIndexOf('}') + 1;
             
+            return {
+                summary: summaryMatch?.[1]?.trim() || "Improvement summary not available",
+                json: jsonMatch?.[1]?.trim() || (jsonStart !== -1 ? text.slice(jsonStart, jsonEnd) : null)
+            };
+        };
 
-            setImprovementSummary(summary);
+        const { summary, json } = extractFromResponse(rawText);
+        setImprovementSummary(summary);
+        
+        if (json) {
+            try {
+                // Clean JSON string
+                const cleanedJson = json
+                    .replace(/```json/g, '')
+                    .replace(/```/g, '')
+                    .trim();
 
-            if (json) {
-                try {
-                    const parsed = JSON.parse(json);
-                    setCustomUserData(parsed);
-                    alert("Enhanced resume saved successfully!");
-                } catch (jsonError) {
-                    console.error("JSON parsing error:", jsonError);
-                    setResult("We received your enhanced resume but had trouble formatting it. The summary is available above.");
-                }
-            } else {
-                setResult("No valid resume data found in the response.");
+                const parsed = JSON.parse(cleanedJson);
+                setCustomUserData(parsed);
+                alert("Enhanced resume saved successfully!");
+            } catch (jsonError) {
+                console.error("JSON parsing error:", jsonError);
+                setResult(prev => prev + "\n\nWe received your enhanced resume but had trouble formatting it. The summary is available above.");
             }
-        } catch (err) {
-            console.error("AI/Parsing error:", err);
-            setResult("An error occurred while processing your request. Please try again.");
-        } finally {
-            setIsLoading(false);
+        } else {
+            setResult(prev => prev + "\n\nNo valid resume data found in the response.");
         }
-    };
+        
+    } catch (err) {
+        console.error("AI/Parsing error:", err);
+        setResult("An error occurred while processing your request. Please try again.");
+    } finally {
+        setIsLoading(false);
+    }
+};
+
 
     const validate = () => {
         const newErrors = {};
@@ -133,7 +161,7 @@ function CustomJob() {
     
 
     return (
-        <>
+        <div className='flex justify-center items-center mt-10 mb-10 flex-col'>
             <div className="container mx-auto px-4 py-8 max-w-4xl">
                 <h1 className="text-3xl font-bold mb-6">Custom Job Description</h1>
                 <form className="space-y-4 mb-8" onSubmit={handleSubmit}>
@@ -161,16 +189,52 @@ function CustomJob() {
 
                 {improvementSummary && (
                     <div className="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 rounded-md shadow-sm">
-                        <h2 className="font-bold text-blue-800 mb-2">Key Improvements by AI:</h2>
+                        <h2 className="font-bold text-blue-800 mb-2">Key Improvements :</h2>
                         <p className="text-blue-700 whitespace-pre-wrap">{improvementSummary}</p>
                     </div>
                 )}
 
             </div>
-            <div>
-                <CustomMyPdf userData={customUserData}/>
+            
+            <div className='w-200'>
+                 <button 
+                    className="inline-flex items-center cursor-pointer justify-center whitespace-nowrap rounded-md text-sm font-medium 
+                                ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 
+                                focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 
+                                border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                    onClick={() => setIsVisible(!isVisible)}
+                    >
+                {isVisible ? 'Hide Preview' : 'Preview Resume'}
+                </button>
+
+                {isVisible && <MyPdf isCustom={true}/>}
             </div>
-        </>
+
+            {customUserData && (
+                <div className='w-200'>
+                    <PersonalDetails isCustom={true} />
+                    <hr />
+                    <WorkExperience isCustom={true}/>
+                    <hr/>
+
+                    <Projects isCustom={true}/>
+
+                    <hr/>
+
+                    <Education isCustom={true}/>
+
+                    <hr />
+                    <Skills isCustom={true} />
+
+                    <hr/>
+                    <Certifications isCustom={true} />
+                    <hr/>
+
+                    <Extracurriculars isCustom={true} />
+                </div>
+            )}
+            
+        </div>
     );
 }
 

@@ -2,9 +2,10 @@ import React, { useContext } from 'react';
 import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 import ResumeTemplate from '../components/ResumeTemplate';
 import { UserContext } from '../context/UserContext';
+import { UseUserData } from '../components/UseUserData';
 
-const MyPdf = () => {
-  const { userData } = useContext(UserContext);
+const MyPdf = ({isCustom=false}) => {
+  const { userData } = UseUserData(isCustom);
   const sampleUserData = {
   name: "Aakash Sahu",
   email: "sahu.Sivyansh@gmail.com",

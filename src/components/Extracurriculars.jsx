@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../context/UserContext';
+import { UseUserData } from './UseUserData';
 
-const Extracurriculars = () => {
-    const { userData, setUserData } = useContext(UserContext);
+const Extracurriculars = ({isCustom=false}) => {
+    const { userData, setUserData } = UseUserData(isCustom);
     const [bulletCounts, setBulletCounts] = useState([]);
 
     // Initialize extracurriculars from userData
@@ -166,29 +167,6 @@ const Extracurriculars = () => {
         <div className="mt-8">
             <h2 className="font-semibold text-gray-900 text-xl mb-6">Extracurricular Activities</h2>
             
-            {/* Add Extracurricular Button */}
-            <button
-                type="button"
-                onClick={addExtracurricular}
-                className="mb-6 inline-flex items-center justify-center whitespace-nowrap cursor-pointer 
-                        rounded-md text-sm font-medium ring-offset-background transition-colors 
-                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring 
-                        focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 
-                        border border-input bg-background hover:bg-accent hover:text-accent-foreground 
-                        h-10 px-4 py-2"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" 
-                    width="24" height="24" viewBox="0 0 24 24" fill="none" 
-                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" 
-                    strokeLinejoin="round" className="lucide lucide-plus-circle h-4 w-4 mr-2"
-                >
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M8 12h8"></path>
-                    <path d="M12 8v8"></path>
-                </svg>
-                Add Activity
-            </button>
-
             {/* Extracurricular Activities List */}
             {userData.extracurriculars?.map((activity, activityIndex) => (
                 <div className="border border-gray-300 rounded-lg p-6 mt-4" key={activityIndex}>
@@ -386,6 +364,29 @@ const Extracurriculars = () => {
                     </div>
                 </div>
             ))}
+
+            {/* Add Extracurricular Button */}
+            <button
+                type="button"
+                onClick={addExtracurricular}
+                className="mb-6 mt-5 inline-flex items-center justify-center whitespace-nowrap cursor-pointer 
+                        rounded-md text-sm font-medium ring-offset-background transition-colors 
+                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring 
+                        focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 
+                        border border-input bg-background hover:bg-accent hover:text-accent-foreground 
+                        h-10 px-4 py-2"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" 
+                    width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" 
+                    strokeLinejoin="round" className="lucide lucide-plus-circle h-4 w-4 mr-2"
+                >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M8 12h8"></path>
+                    <path d="M12 8v8"></path>
+                </svg>
+                Add Activity
+            </button>
         </div>
     );
 };

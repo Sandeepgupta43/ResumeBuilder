@@ -1,45 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
-import PdfParser from './PdfParser';
-import { UserContext } from '../context/UserContext';
-import WorkExperience from './WorkExperience';
-import Projects from './Projects';
-import Education from './Education';
-import Certifications from './Certifications';
-import Extracurriculars from './Extracurriculars';
-import MyPdf from '../PdfFile/MyPdf';
-import Skills from './Skills';
+import React, { useState } from 'react'
+import { UseUserData } from './UseUserData'
 
-
-export default function From() {
-    const [skill,setSkill] = useState('');
-    const [skills,setSkills] = useState([]);
-    const [isVisible,setIsVisible] = useState(false);
+function PersonalDetails({isCustom=false}) {
+    const {userData,setUserData} = UseUserData(isCustom);
     const [errors,setErrors] = useState({});
-
-    const {userData,setUserData} = useContext(UserContext);
-
-    // Initialize skills from userData if available
-    useEffect(() => {
-        if (userData.skills) {
-        const initialSkills = typeof userData.skills === 'string' 
-            ? userData.skills.split(/\s*,\s*|\s*;\s*|\n/).filter(s => s.trim())
-            : userData.skills;
-        setSkills(initialSkills);
-        }
-    }, [userData]);
-
-    useEffect(() => {
-        const localUserData = localStorage.getItem("userData");
-        if(localUserData) {
-            try {
-                const parsedData = JSON.parse(localUserData);
-                setUserData(parsedData);
-            } catch(error) {
-                console.error('Error parsing user data from localStorage:',error);
-            }
-        }
-    },[setUserData])
-
+    
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setUserData(prev => ({
@@ -47,7 +12,6 @@ export default function From() {
         [name]: value
         }));
     };
-
     const validate = () => {
         const newErrors = {};
 
@@ -82,8 +46,6 @@ export default function From() {
         return newErrors;
     };
 
-
-
     const handleSubmit = (e) => {
         e.preventDefault();  
         const validationErrors = validate();
@@ -92,71 +54,9 @@ export default function From() {
         
     };
 
-    const handleSave = () => {
-        const validationErrors = validate();
-        setErrors(validationErrors);
-        if (Object.keys(validationErrors).length > 0) {
-            alert("Please fix validation errors before saving.");
-            return;
-        }
-        try {
-            localStorage.setItem('userData', JSON.stringify(userData));
-            alert('User data saved successfully!');
-        } catch (err) {
-            console.error('Failed to save:', err);
-        }
-    };
-    
   return (
-    <div className="flex justify-center items-center mt-10 mb-10">
-        <div className='w-3xl  p-4 ' >
-            <div className="space-y-12">
-                <h2 className="font-bold text-gray-900 text-2xl">Resume</h2>
-
-                {/* <div className="flex items-center space-x-4">
-                    <label 
-                        className="inline-flex items-center px-4 py-2 bg-white border border-gray-300 
-                                rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 
-                                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer">
-                        <span>
-                            Upload PDF Resume
-                        </span>
-                        <input 
-                            className="flex h-10 rounded-md border border-input bg-background px-3 py-2 
-                                    text-sm file:border-0 file:bg-transparent file:text-sm 
-                                    file:font-medium file:text-foreground placeholder:text-muted-foreground 
-                                    focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring 
-                                    focus-visible:border-ring focus-visible:rounded-sm disabled:cursor-not-allowed 
-                                    disabled:opacity-50 sr-only w-auto" 
-                            accept=".pdf" 
-                            type="file" />
-                    </label>
-                    <button 
-                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium cursor-pointer
-                                ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 
-                                focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none 
-                                disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2
-                                border bg-amber-900 text-white " 
-                        type="submit" 
-                        disabled="">
-                        Parse Resume
-                    </button>
-                </div> */}
-                <PdfParser />
-                <hr/>
-                <button 
-                    className="inline-flex items-center cursor-pointer justify-center whitespace-nowrap rounded-md text-sm font-medium 
-                                ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 
-                                focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 
-                                border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
-                    onClick={() => setIsVisible(!isVisible)}
-                    >
-                {isVisible ? 'Hide Preview' : 'Preview Resume'}
-                </button>
-
-                {isVisible && <MyPdf isCustom={false}/>}
-
-                <form onSubmit={handleSubmit}>
+    <div className="mt-8">
+        <form onSubmit={handleSubmit}>
                     <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                         <div className="sm:col-span-3">
                             <label htmlFor="first-name" className="block text-lg font-medium text-gray-900">
@@ -303,46 +203,9 @@ export default function From() {
                     >
                         Save 
                     </button>
-                </form>
-
-                <hr/>
-
-                {/* <h2 className="font-semibold text-gray-900 text-xl mb-6">Work Experience</h2> */}
-                <WorkExperience isCustom={false}/>
-                
-                <hr/>
-
-                <Projects />
-
-                <hr/>
-
-                <Education />
-
-                <hr/>
-
-                <Skills />
-                <hr/>
-
-                <Certifications />
-                
-                <hr/>
-                <Extracurriculars />
-                
-                <div className="mt-6 flex items-center justify-end gap-x-6">
-                    <button type="button" className="text-sm/6 font-semibold text-gray-900">
-                    Cancel
-                    </button>
-                    <button
-                    type="submit"
-                    onClick={handleSave}
-                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    >
-                    Save
-                    </button>
-                </div>
-            </div>
-        </div>
+        </form>
     </div>
-    
   )
 }
+
+export default PersonalDetails
