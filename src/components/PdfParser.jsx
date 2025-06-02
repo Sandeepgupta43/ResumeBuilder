@@ -3,6 +3,7 @@ import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker?worker";
 import { UserContext } from "../context/UserContext";
 import { GoogleGenAI } from "@google/genai";
+import toast,{Toaster} from "react-hot-toast";
 
 GlobalWorkerOptions.workerPort = new pdfjsWorker();
 const ai = new GoogleGenAI({apiKey: import.meta.env.VITE_Api_key});
@@ -11,6 +12,7 @@ const PdfParser = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [text, setText] = useState("");
   const { setUserData, userData } = useContext(UserContext);
+  const [loading,setLoading] = useState(false);
   
 
   const customPrompt = `Extract and structure the following resume information in JSON format exactly as specified below. Include only these fields with precise formatting:
@@ -98,7 +100,10 @@ const PdfParser = () => {
   };
 
   const handleParseClick = async () => {
+    setLoading(true);
   if (!selectedFile) {
+    setLoading(false);
+    toast.error("Please select a PDF file first.");
     alert("Please select a PDF file first.");
     return;
   }
@@ -130,7 +135,7 @@ const PdfParser = () => {
     // parse (with fallback)
     const parsed = JSON.parse(result);
     const resumeData = parsed.resume || parsed;
-    console.log(resumeData);
+    //console.log(resumeData);
 
     // map into your context shape
     const userDataUpdate = {
@@ -184,6 +189,8 @@ const PdfParser = () => {
 
     setUserData(userDataUpdate);
     setText(extractedText);
+    setLoading(false);
+    toast.success("Resume parsed successfully!");
   } catch (error) {
     console.error("Error parsing PDF:", error);
     alert(`Error parsing PDF: ${error.message}. Please try another file.`);
@@ -220,10 +227,14 @@ const PdfParser = () => {
           focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none 
           disabled:opacity-50 bg-amber-900 text-white hover:bg-amber-800 h-10 px-4 py-2"
           type="button"
+          disabled={loading || !selectedFile}
+
         >
-          Parse Resume
+          {loading ? "Please wait...":"Parse Resume"}
+
         </button>
       </div>
+      <Toaster />
     </>
   );
 };

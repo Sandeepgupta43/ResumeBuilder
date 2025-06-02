@@ -9,6 +9,7 @@ import Extracurriculars from '../components/Extracurriculars';
 import Certifications from '../components/Certifications';
 import PersonalDetails from '../components/PersonalDetails';
 import Skills from '../components/Skills';
+import toast, { Toaster } from 'react-hot-toast';
 
 const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_Api_key });
 
@@ -73,6 +74,7 @@ function CustomJob() {
     };
 
     const handleSubmit = async (e) => {
+
     e.preventDefault();
     setIsLoading(true);
     setResult('');
@@ -126,7 +128,10 @@ function CustomJob() {
 
                 const parsed = JSON.parse(cleanedJson);
                 setCustomUserData(parsed);
-                alert("Enhanced resume saved successfully!");
+                toast.success("Enhanced resume saved successfully!");
+                setIsLoading(false);
+                //alert("Enhanced resume saved successfully!");
+
             } catch (jsonError) {
                 console.error("JSON parsing error:", jsonError);
                 setResult(prev => prev + "\n\nWe received your enhanced resume but had trouble formatting it. The summary is available above.");
@@ -182,8 +187,9 @@ function CustomJob() {
                             disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground 
                             hover:bg-primary/90 h-10 px-4 py-2 w-full"
                         type="submit"
+                        disabled={isLoading}
                     >
-                        Generate ATS Resume
+                        {isLoading ? 'Processing...' : 'Generate Enhanced Resume'}
                     </button>
                 </form>
 
@@ -234,6 +240,7 @@ function CustomJob() {
                 </div>
             )}
             
+            <Toaster />
         </div>
     );
 }
