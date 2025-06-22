@@ -102,13 +102,13 @@ export default function From() {
           {/* <div className="flex items-center space-x-4">
                     <label 
                         className="inline-flex items-center px-4 py-2 bg-white border border-gray-300 
-                                rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 
+                                shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 
                                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer">
                         <span>
                             Upload PDF Resume
                         </span>
                         <input 
-                            className="flex h-10 rounded-md border border-input bg-background px-3 py-2 
+                            className="flex h-10 border border-input bg-background px-3 py-2 
                                     text-sm file:border-0 file:bg-transparent file:text-sm 
                                     file:font-medium file:text-foreground placeholder:text-muted-foreground 
                                     focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring 
@@ -118,7 +118,7 @@ export default function From() {
                             type="file" />
                     </label>
                     <button 
-                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium cursor-pointer
+                        className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium cursor-pointer
                                 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 
                                 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none 
                                 disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2
@@ -130,26 +130,21 @@ export default function From() {
                 </div> */}
           <PdfParser />
 
-          <Link
-            to="/customJob"
-            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium cursor-pointer
-                                ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2
-                                focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none
-                                disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-          >
-            click here to generate custom job resume
-          </Link>
+          <div className="flex items-center space-x-4 mt-2">
+            <Link
+              to="/customJob"
+              className="cursor-pointer shadow-[3px_3px_0_black] bg-white border border-[#DDCCFF] text-[#7833FE] px-4 py-2  font-semibold hover:bg-purple-600 hover:text-white transition"
+            >
+              click here to generate custom job resume
+            </Link>
 
-          <hr />
-          <button
-            className="inline-flex items-center cursor-pointer justify-center whitespace-nowrap rounded-md text-sm font-medium 
-                                ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 
-                                focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 
-                                border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
-            onClick={() => setIsVisible(!isVisible)}
-          >
-            {isVisible ? "Hide Preview" : "Preview Resume"}
-          </button>
+            <button
+              className="shadow-[3px_3px_0_black] text-[#371A70] bg-[#FFD21F] px-4 py-2  font-semibold hover:bg-yellow-300 transition cursor-pointer "
+              onClick={() => setIsVisible(!isVisible)}
+            >
+              {isVisible ? "Hide Preview" : "Preview Resume"}
+            </button>
+          </div>
 
           {isVisible && <MyPdf isCustom={false} />}
 
@@ -172,11 +167,10 @@ export default function From() {
                     autoComplete="given-name"
                     className={`block w-full  bg-white px-3 py-1.5 text-base text-gray-900 
                                     outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 
-                                    focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 ${
-                                      errors.name
-                                        ? "border-red-500"
-                                        : "border-gray-300"
-                                    }`}
+                                    focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 ${errors.name
+                        ? "border-red-500"
+                        : "border-gray-300"
+                      }`}
                   />
                   {errors.name && (
                     <p className="text-red-500 text-sm mt-1">{errors.name}</p>
@@ -199,9 +193,8 @@ export default function From() {
                     onChange={handleInputChange}
                     type="email"
                     autoComplete="email"
-                    className={`block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 ${
-                      errors.email ? "border-red-500" : "border-gray-300"
-                    }`}
+                    className={`block w-full bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 ${errors.email ? "border-red-500" : "border-gray-300"
+                      }`}
                   />
                   {errors.email && (
                     <p className="text-red-500 text-sm mt-1">{errors.email}</p>
@@ -226,11 +219,10 @@ export default function From() {
                     autoComplete="given-name"
                     className={`block w-full  bg-white px-3 py-1.5 text-base text-gray-900 
                                     outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 
-                                    focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 ${
-                                      errors.name
-                                        ? "border-red-500"
-                                        : "border-gray-300"
-                                    }`}
+                                    focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 ${errors.name
+                        ? "border-red-500"
+                        : "border-gray-300"
+                      }`}
                   />
                   {errors.linkedIn && (
                     <p className="text-red-500 text-sm mt-1">
@@ -256,11 +248,10 @@ export default function From() {
                     autoComplete="given-name"
                     className={`block w-full  bg-white px-3 py-1.5 text-base text-gray-900 
                                     outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 
-                                    focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 ${
-                                      errors.phone
-                                        ? "border-red-500"
-                                        : "border-gray-300"
-                                    }`}
+                                    focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 ${errors.phone
+                        ? "border-red-500"
+                        : "border-gray-300"
+                      }`}
                   />
                   {errors.phone && (
                     <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
@@ -283,7 +274,7 @@ export default function From() {
                     value={userData.github}
                     type="text"
                     autoComplete="given-name"
-                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    className="block w-full bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
                 </div>
               </div>
@@ -303,7 +294,7 @@ export default function From() {
                     value={userData.location}
                     type="text"
                     autoComplete="given-name"
-                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    className="block w-full bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
                   {errors.location && (
                     <p className="text-red-500 text-sm mt-1">
@@ -328,7 +319,7 @@ export default function From() {
                   onChange={handleInputChange}
                   value={userData.summary}
                   rows={3}
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  className="block w-full bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   defaultValue={""}
                 />
                 {errors.summary && (
@@ -339,11 +330,7 @@ export default function From() {
             <br />
             <button
               type="submit"
-              className="mt-4 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium cursor-pointer
-                            ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 
-                            focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none 
-                            disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2
-                            border"
+              className="p-2 inline-flex justify-center items-center gap-2.5 border-black bg-white outline-1 outline-offset-[-1px] outline-violet-200 text-black text-sm font-semibold shadow-[3px_3px_0_black] cursor-pointer"
             >
               Save
             </button>
@@ -375,14 +362,14 @@ export default function From() {
           <div className="mt-6 flex items-center justify-end gap-x-6">
             <button
               type="button"
-              className="text-sm/6 font-semibold text-gray-900"
+              className="p-2 inline-flex justify-center items-center gap-2.5 border-black bg-white outline-1 outline-offset-[-1px] outline-violet-200 text-black text-sm font-semibold shadow-[3px_3px_0_black] cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               onClick={handleSave}
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="cursor-pointer shadow-[3px_3px_0_black] text-[#371A70] bg-[#FFD21F] px-4 py-2  font-semibold hover:bg-yellow-300 transition"
             >
               Save
             </button>
