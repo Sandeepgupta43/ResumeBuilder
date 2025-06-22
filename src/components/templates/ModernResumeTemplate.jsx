@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   name: {
-    fontSize: 24,
+    fontSize: 17,
     fontWeight: "bold",
     marginBottom: 10,
     color: "white",
@@ -115,7 +115,7 @@ const ModernResumeTemplate = ({ userData }) => (
           <Text style={styles.sidebarTitle}>SKILLS</Text>
           {(Array.isArray(userData.skills)
             ? userData.skills
-            : userData.skills?.split(/,|•|\n/)
+            : (userData.skills ? userData.skills.split(/,|•|\n/) : [])
           )
             .map((skill) => skill.trim())
             .filter((skill) => skill.length > 0)

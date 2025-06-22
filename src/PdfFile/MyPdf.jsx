@@ -1,6 +1,5 @@
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 import { UseUserData } from "../components/UseUserData";
-import TemplateSelector from "../components/templates/TemplateSelector";
 import ResumeTemplate from "../components/templates/ResumeTemplate";
 import ModernResumeTemplate from "../components/templates/ModernResumeTemplate";
 import ClassicResumeTemplate from "../components/templates/ClassicResumeTemplate";
