@@ -29,16 +29,18 @@ function Skills({ isCustom = false }) {
             skills: newSkills.join(', ')
         }));
     };
-    const removeSkill = (index) => {
-        const newSkills = skills.filter((_, i) => i !== index);
-        setSkills(newSkills);
+    
+    // const removeSkill = (index) => {
+    //     const newSkills = skills.filter((_, i) => i !== index);
+    //     setSkills(newSkills);
 
-        // Update userData context
-        setUserData(prev => ({
-            ...prev,
-            skills: newSkills.join(', ')
-        }));
-    };
+    //     // Update userData context
+    //     setUserData(prev => ({
+    //         ...prev,
+    //         skills: newSkills.join(', ')
+    //     }));
+    // };
+
     return (
         <div className='mt-8'>
             <h2 className="font-semibold text-gray-900 text-xl mb-6">Skills</h2>
