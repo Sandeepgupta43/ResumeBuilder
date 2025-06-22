@@ -3,39 +3,32 @@ import { UserContext } from "../context/UserContext";
 
 function Home() {
   const { userData } = useContext(UserContext);
-  console.log("User Data:", userData);
 
   // Helper function to render arrays of objects
   const renderArrayData = (array, title) => {
-    if (!array || array.length === 0)
-      return (
-        <p>
-          <strong>{title}:</strong> Not available
-        </p>
-      );
+    if (!array || array.length === 0) return null;
 
     return (
-      <div className="mb-4">
-        <strong>{title}:</strong>
-        <ul className="list-disc pl-5 mt-1 space-y-1">
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-gray-800 mb-3 pb-2 border-b border-gray-100">
+          {title}
+        </h3>
+        <div className="space-y-4">
           {array.map((item, index) => (
-            <li key={index} className="text-sm">
-              {JSON.stringify(item, null, 2)}
-            </li>
+            <div key={index} className="bg-gray-50 p-4 rounded-lg">
+              <pre className="text-sm text-gray-700 whitespace-pre-wrap">
+                {JSON.stringify(item, null, 2)}
+              </pre>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     );
   };
 
   // Format skills display
   const renderSkills = () => {
-    if (!userData.skills)
-      return (
-        <p>
-          <strong>Skills:</strong> Not available
-        </p>
-      );
+    if (!userData.skills) return null;
 
     const skillsList =
       typeof userData.skills === "string"
@@ -43,11 +36,16 @@ function Home() {
         : userData.skills;
 
     return (
-      <div className="mb-4">
-        <strong>Skills:</strong>
-        <div className="flex flex-wrap gap-2 mt-1">
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-gray-800 mb-3 pb-2 border-b border-gray-100">
+          Skills
+        </h3>
+        <div className="flex flex-wrap gap-2">
           {skillsList.map((skill, index) => (
-            <span key={index} className="bg-gray-100 px-2 py-1 rounded text-sm">
+            <span
+              key={index}
+              className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
+            >
               {skill.trim()}
             </span>
           ))}
@@ -56,33 +54,50 @@ function Home() {
     );
   };
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Resume Information</h1>
-
-      <div className="bg-white shadow-md rounded-lg p-6 max-w-3xl mx-auto space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <p>
-            <strong>Name:</strong> {userData.name || "Not available"}
+  // Render basic info section
+  const renderBasicInfo = () => (
+    <div className="bg-white shadow-sm rounded-xl p-6 mb-6">
+      <h2 className="text-xl font-bold text-gray-900 mb-4">Personal Information</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <p className="text-gray-700">
+            <span className="font-medium text-gray-900">Name:</span>{" "}
+            {userData.name || "Not provided"}
           </p>
-          <p>
-            <strong>Email:</strong> {userData.email || "Not available"}
-          </p>
-          <p>
-            <strong>Phone:</strong> {userData.phone || "Not available"}
+          <p className="text-gray-700">
+            <span className="font-medium text-gray-900">Email:</span>{" "}
+            {userData.email || "Not provided"}
           </p>
         </div>
+        <div className="space-y-2">
+          <p className="text-gray-700">
+            <span className="font-medium text-gray-900">Phone:</span>{" "}
+            {userData.phone || "Not provided"}
+          </p>
+          <p className="text-gray-700">
+            <span className="font-medium text-gray-900">Location:</span>{" "}
+            {userData.location || "Not provided"}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 
-        {renderSkills()}
+  return (
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Resume Profile</h1>
+          <p className="text-gray-600">A comprehensive overview of your professional details</p>
+        </div>
 
-        {renderArrayData(userData.workExperience, "Work Experience")}
-        {renderArrayData(userData.projects, "Projects")}
-        {renderArrayData(userData.education, "Education")}
-        {renderArrayData(userData.certifications, "Certificates")}
-        {renderArrayData(
-          userData.extracurricular,
-          "Extracurricular Activities"
-        )}
+        {renderBasicInfo()}
+        {userData.skills && renderSkills()}
+        {userData.workExperience && renderArrayData(userData.workExperience, "Work Experience")}
+        {userData.projects && renderArrayData(userData.projects, "Projects")}
+        {userData.education && renderArrayData(userData.education, "Education")}
+        {userData.certifications && renderArrayData(userData.certifications, "Certifications")}
+        {userData.extracurricular && renderArrayData(userData.extracurricular, "Extracurricular Activities")}
       </div>
     </div>
   );

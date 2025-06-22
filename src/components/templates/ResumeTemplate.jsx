@@ -129,7 +129,7 @@ const ResumeTemplate = ({ userData }) => (
           <Text>
             {(Array.isArray(userData.skills)
               ? userData.skills
-              : userData.skills?.split(/,|•|\n/)
+              : (userData.skills ?? "").split(/,|•|\n/)
             )
               .map((skill) => skill.trim())
               .filter((skill) => skill.length > 0)

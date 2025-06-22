@@ -3,17 +3,17 @@ import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker?worker";
 import { UserContext } from "../context/UserContext";
 import { GoogleGenAI } from "@google/genai";
-import toast,{Toaster} from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 GlobalWorkerOptions.workerPort = new pdfjsWorker();
-const ai = new GoogleGenAI({apiKey: import.meta.env.VITE_Api_key});
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_Api_key });
 
 const PdfParser = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [text, setText] = useState("");
   const { setUserData, userData } = useContext(UserContext);
-  const [loading,setLoading] = useState(false);
-  
+  const [loading, setLoading] = useState(false);
+
 
   const customPrompt = `Extract and structure the following resume information in JSON format exactly as specified below. Include only these fields with precise formatting:
 
@@ -101,62 +101,62 @@ const PdfParser = () => {
 
   const handleParseClick = async () => {
     setLoading(true);
-  if (!selectedFile) {
-    setLoading(false);
-    toast.error("Please select a PDF file first.");
-    alert("Please select a PDF file first.");
-    return;
-  }
+    if (!selectedFile) {
+      setLoading(false);
+      toast.error("Please select a PDF file first.");
+      alert("Please select a PDF file first.");
+      return;
+    }
 
-  const fileReader = new FileReader();
-  fileReader.onload = async function () {
-    try {
-      const typedArray = new Uint8Array(this.result);
-      const pdf = await getDocument({ data: typedArray }).promise;
-      let extractedText = "";
+    const fileReader = new FileReader();
+    fileReader.onload = async function () {
+      try {
+        const typedArray = new Uint8Array(this.result);
+        const pdf = await getDocument({ data: typedArray }).promise;
+        let extractedText = "";
 
-      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-        const page = await pdf.getPage(pageNum);
-        const content = await page.getTextContent();
-        const strings = content.items.map((item) => item.str).join(" ");
-        extractedText += `\n\nPage ${pageNum}:\n${strings}`;
-      }
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+          const page = await pdf.getPage(pageNum);
+          const content = await page.getTextContent();
+          const strings = content.items.map((item) => item.str).join(" ");
+          extractedText += `\n\nPage ${pageNum}:\n${strings}`;
+        }
 
-      const query = `${customPrompt}\n${extractedText}`;
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: [{ role: "user", parts: [{ text: query }] }]
-      });
-      const result = response.text
-      .replace(/```json/g, "")
-      .replace(/```/g, "")
-      .trim();
+        const query = `${customPrompt}\n${extractedText}`;
+        const response = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: [{ role: "user", parts: [{ text: query }] }]
+        });
+        const result = response.text
+          .replace(/```json/g, "")
+          .replace(/```/g, "")
+          .trim();
 
-    // parse (with fallback)
-    const parsed = JSON.parse(result);
-    const resumeData = parsed.resume || parsed;
-    //console.log(resumeData);
+        // parse (with fallback)
+        const parsed = JSON.parse(result);
+        const resumeData = parsed.resume || parsed;
+        //console.log(resumeData);
 
-    // map into your context shape
-    const userDataUpdate = {
-      name:        resumeData.name || "",
-      email:       resumeData.email || "",
-      phone:       resumeData.phone || "",
-      linkedIn:    resumeData.linkedIn || "",
-      github:      resumeData.github || "",
-      location:    resumeData.location || "",
-      summary:     resumeData.summary || "",
-      skills:      resumeData.skills.split(',') || "",
-      workExperience: (resumeData.workExperience || []).map(exp => ({
-        company:          exp.company || "",
-        role:             exp.role || "",
-        startDate:        exp.startDate || "",
-        endDate:          exp.endDate || "",
-        currentlyWorking: exp.currentlyWorking || false,
-        location:         exp.location || "",
-        bullets:          exp.bullets || []
-      })),
-      projects: (resumeData.projects || []).map((proj) => ({
+        // map into your context shape
+        const userDataUpdate = {
+          name: resumeData.name || "",
+          email: resumeData.email || "",
+          phone: resumeData.phone || "",
+          linkedIn: resumeData.linkedIn || "",
+          github: resumeData.github || "",
+          location: resumeData.location || "",
+          summary: resumeData.summary || "",
+          skills: resumeData.skills.split(',') || "",
+          workExperience: (resumeData.workExperience || []).map(exp => ({
+            company: exp.company || "",
+            role: exp.role || "",
+            startDate: exp.startDate || "",
+            endDate: exp.endDate || "",
+            currentlyWorking: exp.currentlyWorking || false,
+            location: exp.location || "",
+            bullets: exp.bullets || []
+          })),
+          projects: (resumeData.projects || []).map((proj) => ({
             name: proj.name || "",
             description: proj.description || "",
             startDate: proj.startDate || "",
@@ -184,21 +184,21 @@ const PdfParser = () => {
             location: activity.location || "",
             bullets: activity.bullets || []
           }))
-      
+
+        };
+
+        setUserData(userDataUpdate);
+        setText(extractedText);
+        setLoading(false);
+        toast.success("Resume parsed successfully!");
+      } catch (error) {
+        console.error("Error parsing PDF:", error);
+        alert(`Error parsing PDF: ${error.message}. Please try another file.`);
+      }
     };
 
-    setUserData(userDataUpdate);
-    setText(extractedText);
-    setLoading(false);
-    toast.success("Resume parsed successfully!");
-  } catch (error) {
-    console.error("Error parsing PDF:", error);
-    alert(`Error parsing PDF: ${error.message}. Please try another file.`);
-  }
-};
-
-  fileReader.readAsArrayBuffer(selectedFile);
-};
+    fileReader.readAsArrayBuffer(selectedFile);
+  };
 
   return (
     <>
@@ -230,11 +230,10 @@ const PdfParser = () => {
           disabled={loading || !selectedFile}
 
         >
-          {loading ? "Please wait...":"Parse Resume"}
+          {loading ? "Please wait..." : "Parse Resume"}
 
         </button>
       </div>
-      <Toaster />
     </>
   );
 };
