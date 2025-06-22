@@ -11,9 +11,14 @@ function Navbar() {
       <header className="sticky top-0 z-50 bg-white shadow-md">
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
-            <div className="flex-shrink-0">
-              <span className="text-xl font-bold text-blue-600">ConsoleResume</span>
-            </div>
+            <Link
+              to="/"
+              className="text-black font-bold text-xl"
+            >
+              <span className='bg-gradient-to-r from-black to-stone-500 bg-clip-text text-transparent'>Console</span>
+              <span className="bg-gradient-to-r from-violet-500 to-violet-700 bg-clip-text text-transparent">Resume</span>
+            </Link>
+
 
             {/* Navigation Links */}
             <div className="hidden md:block">

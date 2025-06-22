@@ -23,13 +23,10 @@ const ResumeGenerator = ({ userData, templates }) => {
       />
       <div className="flex  mt-4">
         <PDFDownloadLink
-          key={`${selectedTemplate}-${renderKey}`} 
+          key={`${selectedTemplate}-${renderKey}`}
           document={<DocumentComponent />}
           fileName={`${userData?.name || "resume"}_${selectedTemplate}.pdf`}
-          className="inline-flex items-center cursor-pointer justify-center whitespace-nowrap rounded-md text-sm font-medium 
-                                ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 
-                                focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 
-                                border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+          className="shadow-[3px_3px_0_black] text-[#371A70] bg-[#FFD21F] px-4 py-2 font-semibold hover:bg-yellow-300 transition cursor-pointer"
         >
           {({ loading }) => (loading ? "Generating PDF..." : "Download PDF")}
         </PDFDownloadLink>
@@ -39,7 +36,7 @@ const ResumeGenerator = ({ userData, templates }) => {
         <TemplateComponent userData={userData} />
       </PDFViewer>
 
-      
+
     </div>
   );
 };
