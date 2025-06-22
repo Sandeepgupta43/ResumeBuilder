@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker?worker";
 import { UserContext } from "../context/UserContext";
@@ -124,7 +124,7 @@ const PdfParser = () => {
 
       const query = `${customPrompt}\n${extractedText}`;
       const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
+        model: "gemini-2.5-flash",
         contents: [{ role: "user", parts: [{ text: query }] }]
       });
       const result = response.text

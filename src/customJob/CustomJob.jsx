@@ -92,7 +92,7 @@ function CustomJob() {
         const query = `${customPrompt}\nResume: ${JSON.stringify(userData)}\nJob Description: ${input.trim()}`;
         
         const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash",
+            model: "gemini-2.5-flash",
             contents: [{ role: "user", parts: [{ text: query }] }]
         });
 

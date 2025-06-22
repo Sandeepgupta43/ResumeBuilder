@@ -1,29 +1,38 @@
-import React, { useContext } from "react";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
-import ResumeTemplate from "../components/ResumeTemplate";
-
 import { UseUserData } from "../components/UseUserData";
+import TemplateSelector from "../components/templates/TemplateSelector";
+import ResumeTemplate from "../components/templates/ResumeTemplate";
+import ModernResumeTemplate from "../components/templates/ModernResumeTemplate";
+import ClassicResumeTemplate from "../components/templates/ClassicResumeTemplate";
+import ResumeGenerator from "../components/templates/ResumeGenerator";
+
+const TEMPLATES = {
+  classic: {
+    component: ClassicResumeTemplate,
+    name: "Classic",
+    description: "Professional two-column layout",
+  },
+  modern: {
+    component: ModernResumeTemplate,
+    name: "Modern",
+    description: "Contemporary design with sidebar",
+  },
+  simple: {
+    component: ResumeTemplate,
+    name: "Simple",
+    description: "Clean single-column format",
+  },
+};
 
 const MyPdf = ({ isCustom = false }) => {
-  const { userData } = UseUserData(isCustom);
+  const { userData, isLoading, error } = UseUserData(isCustom);
+
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorDisplay error={error} />;
 
   return (
-    <div className="w-full flex flex-col items-center justify-center gap-4 p-4">
-      {/* Download Link */}
-      <PDFDownloadLink
-        document={<ResumeTemplate userData={userData} />}
-        fileName="resume.pdf"
-        className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-md shadow"
-      >
-        {({ loading }) => (loading ? "Generating PDF..." : "Download PDF")}
-      </PDFDownloadLink>
-
-      {/* PDF Preview */}
-      <div className="w-full max-w-6xl h-[80vh] border border-gray-300 shadow-md">
-        <PDFViewer width="100%" height="100%" showToolbar>
-          <ResumeTemplate userData={userData} />
-        </PDFViewer>
-      </div>
+    <div className="w-full flex flex-col items-center justify-center gap-6 p-4">
+      <ResumeGenerator userData={userData} templates={TEMPLATES} />;
     </div>
   );
 };
