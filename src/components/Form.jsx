@@ -12,23 +12,11 @@ import { Link } from "react-router-dom";
 
 
 export default function From() {
-  const [skill, setSkill] = useState("");
-  const [skills, setSkills] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   const [errors, setErrors] = useState({});
 
   const { userData, setUserData } = useContext(UserContext);
 
-  // Initialize skills from userData if available
-  useEffect(() => {
-    if (userData.skills) {
-      const initialSkills =
-        typeof userData.skills === "string"
-          ? userData.skills.split(/\s*,\s*|\s*;\s*|\n/).filter((s) => s.trim())
-          : userData.skills;
-      setSkills(initialSkills);
-    }
-  }, [userData]);
 
   useEffect(() => {
     const localUserData = localStorage.getItem("userData");
