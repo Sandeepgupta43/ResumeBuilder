@@ -9,14 +9,13 @@ import Extracurriculars from '../components/Extracurriculars';
 import Certifications from '../components/Certifications';
 import PersonalDetails from '../components/PersonalDetails';
 import Skills from '../components/Skills';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_Api_key });
 
 function CustomJob() {
     const [input, setInput] = useState('');
     const [errors, setErrors] = useState({});
-    const [result, setResult] = useState('');
     const [improvementSummary, setImprovementSummary] = useState('');
     const [userData, setUserData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -53,31 +52,30 @@ function CustomJob() {
         </ImprovedResumeJSON>
     `;
 
-    const extractSections = (text) => {
-        try {
-            // First try to parse the entire response as JSON
-            const jsonResponse = JSON.parse(text.replace(/```json/g, '').replace(/```/g, ''));
-            return {
-                summary: jsonResponse.ImprovementSummary || '',
-                json: JSON.stringify(jsonResponse.ImprovedResumeJSON || {})
-            };
-        } catch (e) {
-            // Fallback to regex parsing if direct JSON parse fails
-            const summaryMatch = text.match(/<ImprovementSummary>([\s\S]*?)<\/ImprovementSummary>/);
-            const jsonMatch = text.match(/<ImprovedResumeJSON>([\s\S]*?)<\/ImprovedResumeJSON>/);
+    // const extractSections = (text) => {
+    //     try {
+    //         // First try to parse the entire response as JSON
+    //         const jsonResponse = JSON.parse(text.replace(/```json/g, '').replace(/```/g, ''));
+    //         return {
+    //             summary: jsonResponse.ImprovementSummary || '',
+    //             json: JSON.stringify(jsonResponse.ImprovedResumeJSON || {})
+    //         };
+    //     } catch (e) {
+    //         // Fallback to regex parsing if direct JSON parse fails
+    //         const summaryMatch = text.match(/<ImprovementSummary>([\s\S]*?)<\/ImprovementSummary>/);
+    //         const jsonMatch = text.match(/<ImprovedResumeJSON>([\s\S]*?)<\/ImprovedResumeJSON>/);
 
-            return {
-                summary: summaryMatch ? summaryMatch[1].trim() : '',
-                json: jsonMatch ? jsonMatch[1].trim() : ''
-            };
-        }
-    };
+    //         return {
+    //             summary: summaryMatch ? summaryMatch[1].trim() : '',
+    //             json: jsonMatch ? jsonMatch[1].trim() : ''
+    //         };
+    //     }
+    // };
 
     const handleSubmit = async (e) => {
 
         e.preventDefault();
         setIsLoading(true);
-        setResult('');
         setImprovementSummary('');
 
         const validationErrors = validate();
@@ -97,7 +95,6 @@ function CustomJob() {
             });
 
             let rawText = response.text;
-            setResult(rawText);
 
             // Improved parsing logic
             const extractFromResponse = (text) => {
@@ -134,15 +131,15 @@ function CustomJob() {
 
                 } catch (jsonError) {
                     console.error("JSON parsing error:", jsonError);
-                    setResult(prev => prev + "\n\nWe received your enhanced resume but had trouble formatting it. The summary is available above.");
+                    toast.error("We received your enhanced resume but had trouble formatting it. The summary is available above.");
                 }
             } else {
-                setResult(prev => prev + "\n\nNo valid resume data found in the response.");
+                toast.error("No valid resume data found in the response.");
             }
 
         } catch (err) {
             console.error("AI/Parsing error:", err);
-            setResult("An error occurred while processing your request. Please try again.");
+            toast.error("An error occurred while processing your request. Please try again.");
         } finally {
             setIsLoading(false);
         }
@@ -157,13 +154,12 @@ function CustomJob() {
         return newErrors;
     };
 
-    const cleanJsonText = (rawText) => {
-        // Remove leading/trailing non-JSON text like markdown
-        const start = rawText.indexOf('{');
-        const end = rawText.lastIndexOf('}');
-        return rawText.slice(start, end + 1);
-    };
-
+    // const cleanJsonText = (rawText) => {
+    //     // Remove leading/trailing non-JSON text like markdown
+    //     const start = rawText.indexOf('{');
+    //     const end = rawText.lastIndexOf('}');
+    //     return rawText.slice(start, end + 1);
+    // };
 
     return (
         <div className='flex justify-center items-center mt-10 mb-10 flex-col'>
@@ -232,8 +228,6 @@ function CustomJob() {
                     <Extracurriculars isCustom={true} />
                 </div>
             )}
-
-            <Toaster />
         </div>
     );
 }
