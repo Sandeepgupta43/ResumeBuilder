@@ -205,17 +205,15 @@ const PdfParser = () => {
       <h1 className="font-semibold font-stretch-150%">Import information from existing resume</h1>
       <div className="flex items-center space-x-4 mt-2">
         {/* Styled File Input */}
-        <button
-          className="cursor-pointer shadow-[3px_3px_0_black] bg-white border border-[#DDCCFF] text-[#7833FE] px-4 py-2 font-semibold hover:bg-purple-600 hover:text-white transition"
-        >
+        <label className="cursor-pointer shadow-[3px_3px_0_black] bg-white border border-[#DDCCFF] text-[#7833FE] px-4 py-2 font-semibold hover:bg-purple-600 hover:text-white transition">
           Upload Resume
           <input
             type="file"
             accept=".pdf"
-            className="sr-only"
             onChange={handleFileSelect}
+            className="hidden"
           />
-        </button>
+        </label>
 
         {/* Parse Button */}
         <button
@@ -226,7 +224,6 @@ const PdfParser = () => {
 
         >
           {loading ? "Please wait..." : "Parse Resume"}
-
         </button>
       </div>
     </>
