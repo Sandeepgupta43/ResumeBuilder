@@ -29,16 +29,7 @@ function Skills({ isCustom = false }) {
             skills: newSkills.join(', ')
         }));
     };
-    const removeSkill = (index) => {
-        const newSkills = skills.filter((_, i) => i !== index);
-        setSkills(newSkills);
-
-        // Update userData context
-        setUserData(prev => ({
-            ...prev,
-            skills: newSkills.join(', ')
-        }));
-    };
+    
     return (
         <div className='mt-8'>
             <h2 className="font-semibold text-gray-900 text-xl mb-6">Skills</h2>
@@ -62,7 +53,7 @@ function Skills({ isCustom = false }) {
                     Add Skill
                 </button>
             </div>
-            <div className='flex gap-2 mb-2 flex-wrap'>
+            <div className='flex gap-2 mb-2 flex-wrap mt-4'>
                 {skills.map((data, index) => (
                     <div key={index} className='inline-flex items-center rounded-full border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 text-sm py-1 px-2'>
                         {data}
