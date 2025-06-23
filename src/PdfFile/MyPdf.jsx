@@ -1,11 +1,9 @@
-import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 import { UseUserData } from "../components/UseUserData";
 import ResumeTemplate from "../components/templates/ResumeTemplate";
 import ModernResumeTemplate from "../components/templates/ModernResumeTemplate";
 import ClassicResumeTemplate from "../components/templates/ClassicResumeTemplate";
 import ResumeGenerator from "../components/templates/ResumeGenerator";
 import ProfessionalResumeTemplate from "../components/templates/ProfessionalResumeTemplate";
-import BusinessResumeTemplate from '../components/templates/BusinessResumeTemplate'
 
 const TEMPLATES = {
   classic: {
@@ -32,12 +30,6 @@ const TEMPLATES = {
     description: "Corporate layout with clear sections",
     category: "Business"
   },
-  business: {
-    component: BusinessResumeTemplate,
-    name: "Business",
-    description: "Analytical layout with competencies grid",
-    category: "Business"
-  }
 };
 
 const MyPdf = ({ isCustom = false }) => {
