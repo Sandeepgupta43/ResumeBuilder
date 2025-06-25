@@ -9,6 +9,7 @@ import Extracurriculars from "./Extracurriculars";
 import MyPdf from "../PdfFile/MyPdf";
 import Skills from "./Skills";
 import { Link } from "react-router-dom";
+import PersonalDetails from "./PersonalDetails";
 
 
 export default function From() {
@@ -148,7 +149,7 @@ export default function From() {
 
           {isVisible && <MyPdf isCustom={false} />}
 
-          <form onSubmit={handleSubmit}>
+          {/* <form onSubmit={handleSubmit}>
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-3">
                 <label
@@ -334,7 +335,8 @@ export default function From() {
             >
               Save
             </button>
-          </form>
+          </form> */}
+          <PersonalDetails />
 
           <hr />
 

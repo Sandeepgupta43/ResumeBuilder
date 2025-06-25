@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { GoogleGenAI } from "@google/genai";
 import { CustomUserContext } from '../context/CustomUserContext';
 import WorkExperience from '../components/WorkExperience';
 import Projects from '../components/Projects';
@@ -10,8 +9,8 @@ import Certifications from '../components/Certifications';
 import PersonalDetails from '../components/PersonalDetails';
 import Skills from '../components/Skills';
 import toast from 'react-hot-toast';
+import { geminiHelper } from '@/utils/geminiHelper';
 
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_Api_key });
 
 function CustomJob() {
     const [input, setInput] = useState('');
@@ -89,10 +88,7 @@ function CustomJob() {
         try {
             const query = `${customPrompt}\nResume: ${JSON.stringify(userData)}\nJob Description: ${input.trim()}`;
 
-            const response = await ai.models.generateContent({
-                model: "gemini-2.5-flash",
-                contents: [{ role: "user", parts: [{ text: query }] }]
-            });
+            const response = await geminiHelper(query);
 
             let rawText = response.text;
 

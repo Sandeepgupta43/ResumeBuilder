@@ -2,16 +2,15 @@ import React, { useContext, useState } from "react";
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker?worker";
 import { UserContext } from "../context/UserContext";
-import { GoogleGenAI } from "@google/genai";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import { geminiHelper } from "@/utils/geminiHelper";
 
 GlobalWorkerOptions.workerPort = new pdfjsWorker();
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_Api_key });
 
 const PdfParser = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [text, setText] = useState("");
-  const { setUserData, userData } = useContext(UserContext);
+  const { setUserData } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
 
 
@@ -123,10 +122,9 @@ const PdfParser = () => {
         }
 
         const query = `${customPrompt}\n${extractedText}`;
-        const response = await ai.models.generateContent({
-          model: "gemini-2.5-flash",
-          contents: [{ role: "user", parts: [{ text: query }] }]
-        });
+
+        const response = await geminiHelper(query);
+
         const result = response.text
           .replace(/```json/g, "")
           .replace(/```/g, "")
