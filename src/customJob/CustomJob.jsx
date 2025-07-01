@@ -1,25 +1,23 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { CustomUserContext } from '../context/CustomUserContext';
-import WorkExperience from '../components/WorkExperience';
-import Projects from '../components/Projects';
-import Education from '../components/Education';
-import MyPdf from '../PdfFile/MyPdf';
-import Extracurriculars from '../components/Extracurriculars';
-import Certifications from '../components/Certifications';
-import PersonalDetails from '../components/PersonalDetails';
-import Skills from '../components/Skills';
-import toast from 'react-hot-toast';
-import { geminiHelper } from '@/utils/geminiHelper';
-
+import React, { useContext, useEffect, useState } from "react";
+import { CustomUserContext } from "../context/CustomUserContext";
+import WorkExperience from "../components/WorkExperience";
+import Projects from "../components/Projects";
+import Education from "../components/Education";
+import MyPdf from "../PdfFile/MyPdf";
+import Extracurriculars from "../components/Extracurriculars";
+import Certifications from "../components/Certifications";
+import PersonalDetails from "../components/PersonalDetails";
+import Skills from "../components/Skills";
+import toast from "react-hot-toast";
+import { geminiHelper } from "@/utils/geminiHelper";
+import Layout from "@/layout/Layout";
 
 function CustomJob() {
-    const [input, setInput] = useState('');
+    const [input, setInput] = useState("");
     const [errors, setErrors] = useState({});
-    const [improvementSummary, setImprovementSummary] = useState('');
+    const [improvementSummary, setImprovementSummary] = useState("");
     const [userData, setUserData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [isVisible, setIsVisible] = useState(false);
-
 
     const { setCustomUserData, customUserData } = useContext(CustomUserContext);
 
@@ -33,8 +31,6 @@ function CustomJob() {
             }
         }
     }, []);
-
-
 
     const customPrompt = `
         Analyze the job description and my resume. Return two things:
@@ -51,31 +47,10 @@ function CustomJob() {
         </ImprovedResumeJSON>
     `;
 
-    // const extractSections = (text) => {
-    //     try {
-    //         // First try to parse the entire response as JSON
-    //         const jsonResponse = JSON.parse(text.replace(/```json/g, '').replace(/```/g, ''));
-    //         return {
-    //             summary: jsonResponse.ImprovementSummary || '',
-    //             json: JSON.stringify(jsonResponse.ImprovedResumeJSON || {})
-    //         };
-    //     } catch (e) {
-    //         // Fallback to regex parsing if direct JSON parse fails
-    //         const summaryMatch = text.match(/<ImprovementSummary>([\s\S]*?)<\/ImprovementSummary>/);
-    //         const jsonMatch = text.match(/<ImprovedResumeJSON>([\s\S]*?)<\/ImprovedResumeJSON>/);
-
-    //         return {
-    //             summary: summaryMatch ? summaryMatch[1].trim() : '',
-    //             json: jsonMatch ? jsonMatch[1].trim() : ''
-    //         };
-    //     }
-    // };
-
     const handleSubmit = async (e) => {
-
         e.preventDefault();
         setIsLoading(true);
-        setImprovementSummary('');
+        setImprovementSummary("");
 
         const validationErrors = validate();
         setErrors(validationErrors);
@@ -86,7 +61,9 @@ function CustomJob() {
         }
 
         try {
-            const query = `${customPrompt}\nResume: ${JSON.stringify(userData)}\nJob Description: ${input.trim()}`;
+            const query = `${customPrompt}\nResume: ${JSON.stringify(
+                userData
+            )}\nJob Description: ${input.trim()}`;
 
             const response = await geminiHelper(query);
 
@@ -95,16 +72,26 @@ function CustomJob() {
             // Improved parsing logic
             const extractFromResponse = (text) => {
                 // Try to extract between XML-like tags first
-                const summaryMatch = text.match(/<ImprovementSummary>([\s\S]*?)<\/ImprovementSummary>/i);
-                const jsonMatch = text.match(/<ImprovedResumeJSON>([\s\S]*?)<\/ImprovedResumeJSON>/i);
+                const summaryMatch = text.match(
+                    /<ImprovementSummary>([\s\S]*?)<\/ImprovementSummary>/i
+                );
+                const jsonMatch = text.match(
+                    /<ImprovedResumeJSON>([\s\S]*?)<\/ImprovedResumeJSON>/i
+                );
 
                 // Fallback to looking for JSON directly
-                const jsonStart = text.indexOf('{');
-                const jsonEnd = text.lastIndexOf('}') + 1;
+                const jsonStart = text.indexOf("{");
+                const jsonEnd = text.lastIndexOf("}") + 1;
 
                 return {
-                    summary: summaryMatch?.[1]?.trim() || "Improvement summary not available",
-                    json: jsonMatch?.[1]?.trim() || (jsonStart !== -1 ? text.slice(jsonStart, jsonEnd) : null)
+                    summary:
+                        summaryMatch?.[1]?.trim() ||
+                        "Improvement summary not available",
+                    json:
+                        jsonMatch?.[1]?.trim() ||
+                        (jsonStart !== -1
+                            ? text.slice(jsonStart, jsonEnd)
+                            : null),
                 };
             };
 
@@ -115,8 +102,8 @@ function CustomJob() {
                 try {
                     // Clean JSON string
                     const cleanedJson = json
-                        .replace(/```json/g, '')
-                        .replace(/```/g, '')
+                        .replace(/```json/g, "")
+                        .replace(/```/g, "")
                         .trim();
 
                     const parsed = JSON.parse(cleanedJson);
@@ -124,85 +111,91 @@ function CustomJob() {
                     toast.success("Enhanced resume saved successfully!");
                     setIsLoading(false);
                     //alert("Enhanced resume saved successfully!");
-
                 } catch (jsonError) {
                     console.error("JSON parsing error:", jsonError);
-                    toast.error("We received your enhanced resume but had trouble formatting it. The summary is available above.");
+                    toast.error(
+                        "We received your enhanced resume but had trouble formatting it. The summary is available above."
+                    );
                 }
             } else {
                 toast.error("No valid resume data found in the response.");
             }
-
         } catch (err) {
             console.error("AI/Parsing error:", err);
-            toast.error("An error occurred while processing your request. Please try again.");
+            toast.error(
+                "An error occurred while processing your request. Please try again."
+            );
         } finally {
             setIsLoading(false);
         }
     };
 
-
     const validate = () => {
         const newErrors = {};
         if (!input.trim()) {
-            newErrors.input = 'Please enter job description.';
+            newErrors.input = "Please enter job description.";
         }
         return newErrors;
     };
 
-    // const cleanJsonText = (rawText) => {
-    //     // Remove leading/trailing non-JSON text like markdown
-    //     const start = rawText.indexOf('{');
-    //     const end = rawText.lastIndexOf('}');
-    //     return rawText.slice(start, end + 1);
-    // };
 
     return (
-        <div className='flex justify-center items-center mt-10 mb-10 flex-col'>
-            <div className="container mx-auto px-4 py-8 max-w-4xl">
-                <h1 className="text-3xl font-bold mb-6">Custom Job Description</h1>
-                <form className="space-y-4 mb-8" onSubmit={handleSubmit}>
+        <div className="flex justify-center items-center mt-10 mb-10 flex-col">
+            <div className="container mx-auto max-w-6xl px-4 py-10 flex flex-col md:flex-row gap-8">
+                {/* Left Side: Form */}
+                <form
+                    onSubmit={handleSubmit}
+                    className="w-full md:w-1/2 space-y-6"
+                >
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                        Custom Job Description
+                    </h1>
+
                     <textarea
-                        className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm 
-                            ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none
-                            focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
-                            disabled:cursor-not-allowed disabled:opacity-50 min-h-[200px]"
+                        className="w-full min-h-[200px] resize-none rounded-md border border-gray-300 bg-white px-4 py-3 text-sm text-gray-800 placeholder-gray-400 shadow-sm focus:border-violet-500 focus:ring-2 focus:ring-violet-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="Paste your job description here..."
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                    ></textarea>
-                    {errors.input && <p className="text-red-500 text-sm">{errors.input}</p>}
+                    />
+
+                    {errors.input && (
+                        <p className="text-sm text-red-600">{errors.input}</p>
+                    )}
+
                     <button
-                        className="p-2 w-full bg-violet-600 outline-1 outline-offset-[-1px] inline-flex justify-center items-center gap-2.5 border-black text-white text-sm font-semibold shadow-[3px_3px_0_black] cursor-pointer"
                         type="submit"
                         disabled={isLoading}
+                        className="p-2 w-full bg-violet-600 outline-1 outline-offset-[-1px] inline-flex justify-center items-center gap-2.5 border-black text-white text-sm font-semibold shadow-[3px_3px_0_black] cursor-pointe"
                     >
-                        {isLoading ? 'Processing...' : 'Generate Enhanced Resume'}
+                        {isLoading
+                            ? "Processing..."
+                            : "Generate Enhanced Resume"}
                     </button>
                 </form>
 
-                {improvementSummary && (
-                    <div className="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 rounded-md shadow-sm">
-                        <h2 className="font-bold text-blue-800 mb-2">Key Improvements :</h2>
-                        <p className="text-blue-700 whitespace-pre-wrap">{improvementSummary}</p>
-                    </div>
-                )}
-
+                {/* Right Side: Output */}
+                <div className="w-full md:w-1/2">
+                    {improvementSummary ? (
+                        <div className="rounded-md border-l-4 border-blue-500 bg-blue-50 p-6 shadow-sm">
+                            <h2 className="mb-3 text-lg font-semibold text-blue-800">
+                                Key Improvements:
+                            </h2>
+                            <p className="whitespace-pre-wrap text-sm text-blue-700">
+                                {improvementSummary}
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-center h-full min-h-[200px] text-gray-500 text-sm bg-gray-50 border border-dashed border-gray-300 rounded-md p-6">
+                            No improvements yet. Paste a job description and
+                            click "Generate Enhanced Resume".
+                        </div>
+                    )}
+                </div>
             </div>
 
-            <div className='w-200'>
-                <button
-                    className="p-2 inline-flex justify-center items-center gap-2.5 border-black bg-white outline-1 outline-offset-[-1px] outline-violet-200 text-black text-sm font-semibold shadow-[3px_3px_0_black] cursor-pointer"
-                    onClick={() => setIsVisible(!isVisible)}
-                >
-                    {isVisible ? 'Hide Preview' : 'Preview Resume'}
-                </button>
-
-                {isVisible && <MyPdf isCustom={true} />}
-            </div>
-
-            {customUserData && (
-                <div className='w-200'>
+            <Layout isCustom={true}/>
+            {/* {customUserData && (
+                <div className="w-200">
                     <PersonalDetails isCustom={true} />
                     <hr />
                     <WorkExperience isCustom={true} />
@@ -223,7 +216,7 @@ function CustomJob() {
 
                     <Extracurriculars isCustom={true} />
                 </div>
-            )}
+            )} */}
         </div>
     );
 }

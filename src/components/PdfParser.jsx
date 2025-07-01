@@ -4,13 +4,15 @@ import pdfjsWorker from "pdfjs-dist/build/pdf.worker?worker";
 import { UserContext } from "../context/UserContext";
 import toast from "react-hot-toast";
 import { geminiHelper } from "@/utils/geminiHelper";
+import { CustomUserContext } from "@/context/CustomUserContext";
 
 GlobalWorkerOptions.workerPort = new pdfjsWorker();
 
-const PdfParser = () => {
+const PdfParser = ({isCustom = false}) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [text, setText] = useState("");
   const { setUserData } = useContext(UserContext);
+  const {setCustomUserData} = useContext(CustomUserContext);
   const [loading, setLoading] = useState(false);
 
 
@@ -184,8 +186,11 @@ const PdfParser = () => {
           }))
 
         };
-
-        setUserData(userDataUpdate);
+        if(isCustom) {
+          setCustomUserData(userDataUpdate);
+        } else {
+          setUserData(userDataUpdate);
+        }
         setText(extractedText);
         setLoading(false);
         toast.success("Resume parsed successfully!");

@@ -362,12 +362,7 @@ export default function From() {
           <Extracurriculars />
 
           <div className="mt-6 flex items-center justify-end gap-x-6">
-            <button
-              type="button"
-              className="p-2 inline-flex justify-center items-center gap-2.5 border-black bg-white outline-1 outline-offset-[-1px] outline-violet-200 text-black text-sm font-semibold shadow-[3px_3px_0_black] cursor-pointer"
-            >
-              Cancel
-            </button>
+            
             <button
               type="submit"
               onClick={handleSave}

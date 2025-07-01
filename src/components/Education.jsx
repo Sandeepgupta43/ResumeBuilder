@@ -1,45 +1,24 @@
-import { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../context/UserContext';
-import { UseUserData } from './UseUserData';
+import { UseUserData } from "./UseUserData";
 
-const Education = ({isCustom=false}) => {
+const Education = ({ isCustom = false }) => {
     const { userData, setUserData } = UseUserData(isCustom);
-
-    // Initialize education from userData
-    useEffect(() => {
-        if (userData.education && userData.education.length === 0) {
-            // Add an empty education entry if none exists
-            // setUserData(prev => ({
-            //     ...prev,
-            //     education: [{
-            //         institution: "",
-            //         degree: "",
-            //         fieldOfStudy: "",
-            //         startDate: "",
-            //         endDate: "",
-            //         gpa: "",
-            //         description: ""
-            //     }]
-            // }));
-        }
-    }, [userData.education, setUserData]);
 
     // Handle education changes
     const handleEducationChange = (index, field, value) => {
         const updatedEducation = [...userData.education];
         updatedEducation[index] = {
             ...updatedEducation[index],
-            [field]: value
+            [field]: value,
         };
-        setUserData(prev => ({
+        setUserData((prev) => ({
             ...prev,
-            education: updatedEducation
+            education: updatedEducation,
         }));
     };
 
     // Add new education entry
     const addEducation = () => {
-        setUserData(prev => ({
+        setUserData((prev) => ({
             ...prev,
             education: [
                 ...prev.education,
@@ -50,32 +29,39 @@ const Education = ({isCustom=false}) => {
                     startDate: "",
                     endDate: "",
                     gpa: "",
-                    description: ""
-                }
-            ]
+                    description: "",
+                },
+            ],
         }));
     };
 
     // Remove education entry
     const removeEducation = (index) => {
-        setUserData(prev => ({
+        setUserData((prev) => ({
             ...prev,
-            education: prev.education.filter((_, i) => i !== index)
+            education: prev.education.filter((_, i) => i !== index),
         }));
     };
 
     return (
-        <div className="mt-8">
-            <h2 className="font-semibold text-gray-900 text-xl mb-6">Education</h2>
-            
-            
+        <div className="mt-6 sm:mt-8">
+            <h2 className="font-semibold text-gray-900 text-lg sm:text-xl mb-4 sm:mb-6">
+                Education
+            </h2>
 
             {/* Education List */}
             {userData.education?.map((edu, eduIndex) => (
-                <div className="border border-gray-300 rounded-lg p-6 mt-4" key={eduIndex}>
-                    <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                        <div className="sm:col-span-3">
-                            <label htmlFor={`institution-${eduIndex}`} className="block text-lg font-medium text-gray-900">
+                <div
+                    className="border border-gray-300 rounded-lg p-4 sm:p-6 mt-4"
+                    key={eduIndex}
+                >
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-6 sm:gap-x-6 sm:gap-y-8">
+                        {/* Institution Name */}
+                        <div className="sm:col-span-6 md:col-span-3">
+                            <label
+                                htmlFor={`institution-${eduIndex}`}
+                                className="block text-base sm:text-lg font-medium text-gray-900"
+                            >
                                 Institution Name
                             </label>
                             <input
@@ -83,13 +69,23 @@ const Education = ({isCustom=false}) => {
                                 name="institution"
                                 type="text"
                                 value={edu.institution || ""}
-                                onChange={(e) => handleEducationChange(eduIndex, 'institution', e.target.value)}
-                                className="mt-2 block w-full bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 rounded-md placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:outline-none"
+                                onChange={(e) =>
+                                    handleEducationChange(
+                                        eduIndex,
+                                        "institution",
+                                        e.target.value
+                                    )
+                                }
+                                className="mt-1 sm:mt-2 block w-full bg-white px-3 py-1.5 text-sm sm:text-base text-gray-900 border border-gray-300 rounded-md placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:outline-none"
                             />
                         </div>
 
-                        <div className="sm:col-span-3">
-                            <label htmlFor={`degree-${eduIndex}`} className="block text-lg font-medium text-gray-900">
+                        {/* Degree/Certification */}
+                        <div className="sm:col-span-6 md:col-span-3">
+                            <label
+                                htmlFor={`degree-${eduIndex}`}
+                                className="block text-base sm:text-lg font-medium text-gray-900"
+                            >
                                 Degree/Certification
                             </label>
                             <input
@@ -97,14 +93,23 @@ const Education = ({isCustom=false}) => {
                                 name="degree"
                                 type="text"
                                 value={edu.degree || ""}
-                                onChange={(e) => handleEducationChange(eduIndex, 'degree', e.target.value)}
-                                className="mt-2 block w-full bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 rounded-md placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:outline-none"
+                                onChange={(e) =>
+                                    handleEducationChange(
+                                        eduIndex,
+                                        "degree",
+                                        e.target.value
+                                    )
+                                }
+                                className="mt-1 sm:mt-2 block w-full bg-white px-3 py-1.5 text-sm sm:text-base text-gray-900 border border-gray-300 rounded-md placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:outline-none"
                             />
                         </div>
 
-                        
-                        <div className="sm:col-span-3">
-                            <label htmlFor={`gpa-${eduIndex}`} className="block text-lg font-medium text-gray-900">
+                        {/* GPA */}
+                        <div className="sm:col-span-6 md:col-span-3">
+                            <label
+                                htmlFor={`gpa-${eduIndex}`}
+                                className="block text-base sm:text-lg font-medium text-gray-900"
+                            >
                                 GPA
                             </label>
                             <input
@@ -112,13 +117,23 @@ const Education = ({isCustom=false}) => {
                                 name="gpa"
                                 type="text"
                                 value={edu.gpa || ""}
-                                onChange={(e) => handleEducationChange(eduIndex, 'gpa', e.target.value)}
-                                className="mt-2 block w-full bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 rounded-md placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:outline-none"
+                                onChange={(e) =>
+                                    handleEducationChange(
+                                        eduIndex,
+                                        "gpa",
+                                        e.target.value
+                                    )
+                                }
+                                className="mt-1 sm:mt-2 block w-full bg-white px-3 py-1.5 text-sm sm:text-base text-gray-900 border border-gray-300 rounded-md placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:outline-none"
                             />
                         </div>
 
-                        <div className="sm:col-span-3">
-                            <label htmlFor={`start-date-${eduIndex}`} className="block text-lg font-medium text-gray-900">
+                        {/* Start Date */}
+                        <div className="sm:col-span-6 md:col-span-3">
+                            <label
+                                htmlFor={`start-date-${eduIndex}`}
+                                className="block text-base sm:text-lg font-medium text-gray-900"
+                            >
                                 Start Date
                             </label>
                             <input
@@ -126,13 +141,23 @@ const Education = ({isCustom=false}) => {
                                 name="startDate"
                                 type="month"
                                 value={edu.startDate || ""}
-                                onChange={(e) => handleEducationChange(eduIndex, 'startDate', e.target.value)}
-                                className="mt-2 block w-full bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-600 focus:outline-none"
+                                onChange={(e) =>
+                                    handleEducationChange(
+                                        eduIndex,
+                                        "startDate",
+                                        e.target.value
+                                    )
+                                }
+                                className="mt-1 sm:mt-2 block w-full bg-white px-3 py-1.5 text-sm sm:text-base text-gray-900 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-600 focus:outline-none"
                             />
                         </div>
 
-                        <div className="sm:col-span-3">
-                            <label htmlFor={`end-date-${eduIndex}`} className="block text-lg font-medium text-gray-900">
+                        {/* End Date */}
+                        <div className="sm:col-span-6 md:col-span-3">
+                            <label
+                                htmlFor={`end-date-${eduIndex}`}
+                                className="block text-base sm:text-lg font-medium text-gray-900"
+                            >
                                 End Date
                             </label>
                             <input
@@ -140,41 +165,36 @@ const Education = ({isCustom=false}) => {
                                 name="endDate"
                                 type="month"
                                 value={edu.endDate || ""}
-                                onChange={(e) => handleEducationChange(eduIndex, 'endDate', e.target.value)}
-                                className="mt-2 block w-full bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-600 focus:outline-none"
+                                onChange={(e) =>
+                                    handleEducationChange(
+                                        eduIndex,
+                                        "endDate",
+                                        e.target.value
+                                    )
+                                }
+                                className="mt-1 sm:mt-2 block w-full bg-white px-3 py-1.5 text-sm sm:text-base text-gray-900 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-600 focus:outline-none"
                             />
                         </div>
-
-                        {/* <div className="sm:col-span-6">
-                            <label htmlFor={`description-${eduIndex}`} className="block text-lg font-medium text-gray-900">
-                                Description
-                            </label>
-                            <textarea
-                                id={`description-${eduIndex}`}
-                                name="description"
-                                rows={3}
-                                value={edu.description || ""}
-                                onChange={(e) => handleEducationChange(eduIndex, 'description', e.target.value)}
-                                className="mt-2 block w-full bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 rounded-md placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:outline-none"
-                            />
-                        </div> */}
                     </div>
 
-                    <div className="mt-6 text-right">
-                        <button 
-                            className="inline-flex items-center justify-center whitespace-nowrap cursor-pointer
-                                    rounded-md text-sm font-medium ring-offset-background transition-colors 
-                                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring 
-                                    focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 
-                                    hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2" 
+                    {/* Remove Education Button */}
+                    <div className="mt-4 sm:mt-6 text-right">
+                        <button
+                            className="inline-flex items-center justify-center rounded-md text-sm sm:text-base font-medium px-4 py-2 border border-gray-300 bg-white hover:bg-gray-50 w-full sm:w-auto"
                             type="button"
                             onClick={() => removeEducation(eduIndex)}
                         >
-                            <svg 
-                                xmlns="http://www.w3.org/2000/svg" 
-                                width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" 
-                                className="lucide lucide-trash2 h-4 w-4 mr-2"
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="h-4 w-4 mr-2"
                             >
                                 <path d="M3 6h18"></path>
                                 <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
@@ -188,22 +208,23 @@ const Education = ({isCustom=false}) => {
                 </div>
             ))}
 
-
             {/* Add Education Button */}
             <button
                 type="button"
                 onClick={addEducation}
-                className="mb-6 mt-5 inline-flex items-center justify-center whitespace-nowrap cursor-pointer 
-                        rounded-md text-sm font-medium ring-offset-background transition-colors 
-                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring 
-                        focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 
-                        border border-input bg-background hover:bg-accent hover:text-accent-foreground 
-                        h-10 px-4 py-2"
+                className="mt-4 sm:mt-5 inline-flex items-center justify-center rounded-md text-sm sm:text-base font-medium px-4 py-2 border border-gray-300 bg-white hover:bg-gray-50 w-full sm:w-auto"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" 
-                    width="24" height="24" viewBox="0 0 24 24" fill="none" 
-                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" 
-                    strokeLinejoin="round" className="lucide lucide-plus-circle h-4 w-4 mr-2"
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-4 w-4 mr-2"
                 >
                     <circle cx="12" cy="12" r="10"></circle>
                     <path d="M8 12h8"></path>
