@@ -164,12 +164,9 @@ function ModernResumeTemplate({ isCustom = false }) {
         {/* Extracurriculars */}
         {data.extracurriculars?.length > 0 && (
           <section className="mb-6">
-            <h2 className="text-xl font-bold text-gray-800 border-b border-gray-300 pb-1 mb-3">ACTIVITIES</h2>
-            {data.extracurriculars.map((activity, i) => (
-              <div key={i} className="mb-3">
-                <h3 className="font-semibold">{activity.title}</h3>
-                <p className="text-sm text-gray-600">{activity.description}</p>
-              </div>
+            <h2 className="text-lg font-bold border-b border-gray-300 mb-1">EXTRACURRICULARS</h2>
+            {data.extracurriculars.map((extr, i) => (
+              <p key={i}>• {extr.role} at {extr.organization} ({extr.startDate} – {extr.endDate})</p>
             ))}
           </section>
         )}

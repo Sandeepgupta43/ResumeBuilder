@@ -5,7 +5,18 @@ import {
   Document,
   StyleSheet,
   Font,
+  Link,
 } from "@react-pdf/renderer";
+
+// Register fonts
+Font.register({
+  family: "Helvetica",
+  fonts: [
+    { src: "https://fonts.cdnfonts.com/s/14098/Helvetica.woff" },
+    { src: "https://fonts.cdnfonts.com/s/14098/Helvetica-Bold.woff", fontWeight: "bold" },
+    { src: "https://fonts.cdnfonts.com/s/14098/Helvetica-Oblique.woff", fontStyle: "italic" },
+  ],
+});
 
 const styles = StyleSheet.create({
   page: {
@@ -131,9 +142,35 @@ const styles = StyleSheet.create({
     fontSize: 8,
     color: "#718096",
   },
+  certificationItem: {
+    marginBottom: 6,
+  },
+  certificationName: {
+    fontWeight: "bold",
+    fontSize: 9,
+  },
+  certificationDetails: {
+    fontSize: 8,
+  },
+  languageItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 4,
+  },
+  languageName: {
+    fontSize: 9,
+  },
+  languageProficiency: {
+    fontSize: 8,
+    color: "#718096",
+  },
+  link: {
+    color: "#3182ce",
+    textDecoration: "none",
+  },
 });
 
-const ProfessionalResumeTemplate = ({ userData }) => {
+const ModernProfessionalTemplate = ({ userData }) => {
   const formatSkills = () => {
     return Array.isArray(userData.skills)
       ? userData.skills
@@ -146,7 +183,8 @@ const ProfessionalResumeTemplate = ({ userData }) => {
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.name}>{userData.name}</Text>
-          <Text style={styles.title}>{userData.title}</Text>
+          {userData.title && <Text style={styles.title}>{userData.title}</Text>}
+          
           <View style={styles.contactRow}>
             {userData.email && (
               <View style={styles.contactItem}>
@@ -168,17 +206,31 @@ const ProfessionalResumeTemplate = ({ userData }) => {
                 <Text>🌐 {userData.website.replace(/^https?:\/\//, '')}</Text>
               </View>
             )}
+            {userData.linkedIn && (
+              <View style={styles.contactItem}>
+                <Link src={userData.linkedIn} style={styles.link}>
+                  LinkedIn
+                </Link>
+              </View>
+            )}
+            {userData.github && (
+              <View style={styles.contactItem}>
+                <Link src={userData.github} style={styles.link}>
+                  GitHub
+                </Link>
+              </View>
+            )}
           </View>
         </View>
 
         {/* Two-column layout */}
         <View style={styles.twoColumn}>
-          {/* Left column */}
+          {/* Left column - 60% width */}
           <View style={styles.leftColumn}>
-            {/* Summary */}
+            {/* Profile Summary */}
             {userData.summary && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Profile</Text>
+                <Text style={styles.sectionTitle}>PROFILE</Text>
                 <Text style={{ fontSize: 9 }}>{userData.summary}</Text>
               </View>
             )}
@@ -186,7 +238,7 @@ const ProfessionalResumeTemplate = ({ userData }) => {
             {/* Work Experience */}
             {userData.workExperience?.length > 0 && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Experience</Text>
+                <Text style={styles.sectionTitle}>EXPERIENCE</Text>
                 {userData.workExperience.map((exp, i) => (
                   <View key={i} style={{ marginBottom: 12 }}>
                     <View style={styles.jobHeader}>
@@ -210,14 +262,26 @@ const ProfessionalResumeTemplate = ({ userData }) => {
                 ))}
               </View>
             )}
+
+            {/* Extracurriculars */}
+            {userData.extracurriculars?.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>EXTRACURRICULARS</Text>
+                {userData.extracurriculars.map((extr, i) => (
+                  <Text key={i} style={{ fontSize: 9, marginBottom: 4 }}>
+                    • {extr.role} at {extr.organization} ({extr.startDate} – {extr.endDate})
+                  </Text>
+                ))}
+              </View>
+            )}
           </View>
 
-          {/* Right column */}
+          {/* Right column - 40% width */}
           <View style={styles.rightColumn}>
             {/* Skills */}
             {formatSkills().length > 0 && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Skills</Text>
+                <Text style={styles.sectionTitle}>SKILLS</Text>
                 <View>
                   {formatSkills().map((skill, i) => (
                     <View key={i} style={styles.skillItem}>
@@ -232,7 +296,7 @@ const ProfessionalResumeTemplate = ({ userData }) => {
             {/* Education */}
             {userData.education?.length > 0 && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Education</Text>
+                <Text style={styles.sectionTitle}>EDUCATION</Text>
                 {userData.education.map((edu, i) => (
                   <View key={i} style={styles.educationItem}>
                     <View style={styles.educationHeader}>
@@ -255,13 +319,11 @@ const ProfessionalResumeTemplate = ({ userData }) => {
             {/* Certifications */}
             {userData.certifications?.length > 0 && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Certifications</Text>
+                <Text style={styles.sectionTitle}>CERTIFICATIONS</Text>
                 {userData.certifications.map((cert, i) => (
-                  <View key={i} style={{ marginBottom: 6 }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 9 }}>
-                      {cert.name}
-                    </Text>
-                    <Text style={{ fontSize: 8 }}>
+                  <View key={i} style={styles.certificationItem}>
+                    <Text style={styles.certificationName}>{cert.name}</Text>
+                    <Text style={styles.certificationDetails}>
                       {cert.issuer} • {cert.date}
                     </Text>
                   </View>
@@ -272,18 +334,11 @@ const ProfessionalResumeTemplate = ({ userData }) => {
             {/* Languages */}
             {userData.languages?.length > 0 && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Languages</Text>
+                <Text style={styles.sectionTitle}>LANGUAGES</Text>
                 {userData.languages.map((lang, i) => (
-                  <View
-                    key={i}
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      marginBottom: 4,
-                    }}
-                  >
-                    <Text style={{ fontSize: 9 }}>{lang.language}</Text>
-                    <Text style={{ fontSize: 8, color: '#718096' }}>
+                  <View key={i} style={styles.languageItem}>
+                    <Text style={styles.languageName}>{lang.language}</Text>
+                    <Text style={styles.languageProficiency}>
                       {lang.proficiency}
                     </Text>
                   </View>
@@ -297,4 +352,4 @@ const ProfessionalResumeTemplate = ({ userData }) => {
   );
 };
 
-export default ProfessionalResumeTemplate;
+export default ModernProfessionalTemplate;

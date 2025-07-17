@@ -8,7 +8,7 @@ import {
   Font,
 } from "@react-pdf/renderer";
 
-// Register fonts if needed
+// Register fonts
 Font.register({
   family: "Helvetica",
   fonts: [
@@ -25,17 +25,17 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica",
   },
   sidebar: {
-    width: "30%",
-    backgroundColor: "#2d3748", // Dark gray-blue
+    width: "33%",
+    backgroundColor: "#1a202c",
     color: "#f7fafc",
-    padding: 25,
+    padding: 20,
   },
   mainContent: {
-    width: "70%",
-    padding: 30,
+    width: "67%",
+    padding: 25,
   },
   name: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
     marginBottom: 5,
     color: "#ffffff",
@@ -46,18 +46,17 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "bold",
     marginBottom: 10,
     color: "#2d3748",
     borderBottomWidth: 1,
-    borderBottomColor: "#3182ce",
+    borderBottomColor: "#e2e8f0",
     paddingBottom: 3,
   },
   sidebarSectionTitle: {
     fontSize: 14,
     fontWeight: "bold",
-    marginTop: 15,
     marginBottom: 8,
     color: "#ffffff",
     borderBottomWidth: 1,
@@ -144,9 +143,13 @@ const styles = StyleSheet.create({
     fontSize: 9,
     color: "#a0aec0",
   },
+  extracurricularItem: {
+    marginBottom: 4,
+    fontSize: 10,
+  },
 });
 
-const ModernResumeTemplate = ({ userData }) => {
+const ModernResumePDF = ({ userData }) => {
   const formatSkills = () => {
     return Array.isArray(userData.skills)
       ? userData.skills
@@ -247,9 +250,10 @@ const ModernResumeTemplate = ({ userData }) => {
                       {exp.startDate} – {exp.endDate}
                     </Text>
                   </View>
-                  <Text style={styles.company}>
-                    {exp.company} {exp.project && `• ${exp.project}`}
-                  </Text>
+                  <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                    <Text style={styles.company}>{exp.company}</Text>
+                    {exp.project && <Text style={styles.company}>{exp.project}</Text>}
+                  </View>
                   <View style={{ marginTop: 4 }}>
                     {exp.bullets?.map((b, j) => (
                       <View key={j} style={styles.bulletItem}>
@@ -308,12 +312,11 @@ const ModernResumeTemplate = ({ userData }) => {
           {/* Extracurriculars */}
           {userData.extracurriculars?.length > 0 && (
             <View style={{ marginBottom: 15 }}>
-              <Text style={styles.sectionTitle}>ACTIVITIES</Text>
-              {userData.extracurriculars.map((activity, i) => (
-                <View key={i} style={{ marginBottom: 8 }}>
-                  <Text style={{ fontWeight: "bold", fontSize: 10 }}>{activity.title}</Text>
-                  <Text style={{ fontSize: 9 }}>{activity.description}</Text>
-                </View>
+              <Text style={styles.sectionTitle}>EXTRACURRICULARS</Text>
+              {userData.extracurriculars.map((extr, i) => (
+                <Text key={i} style={styles.extracurricularItem}>
+                  • {extr.role} at {extr.organization} ({extr.startDate} – {extr.endDate})
+                </Text>
               ))}
             </View>
           )}
@@ -323,4 +326,4 @@ const ModernResumeTemplate = ({ userData }) => {
   );
 };
 
-export default ModernResumeTemplate;
+export default ModernResumePDF;

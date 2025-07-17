@@ -81,7 +81,18 @@ const ModernProfessionalTemplate = ({ isCustom = false }) => {
               ))}
             </div>
           )}
-        </div>
+
+
+          {/* Extracurriculars */}
+          {data.extracurriculars?.length > 0 && (
+            <section className="mb-6">
+              <h2 className="text-lg font-bold border-b border-gray-300 mb-1">EXTRACURRICULARS</h2>
+              {data.extracurriculars.map((extr, i) => (
+                <p key={i}>• {extr.role} at {extr.organization} ({extr.startDate} – {extr.endDate})</p>
+              ))}
+            </section>
+          )}
+            </div>
 
         {/* Right column - 40% width */}
         <div className="w-2/5 pl-2">

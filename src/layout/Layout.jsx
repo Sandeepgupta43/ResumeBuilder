@@ -173,9 +173,9 @@ function Layout({ isCustom = false }) {
                                                 )
                                             }
                                             className={`min-w-[120px] shadow-[2px_2px_0_black] sm:shadow-[3px_3px_0_black] 
-                 text-[#371A70] hover:bg-yellow-300 px-3 py-1 sm:px-4 sm:py-2 
-                 font-semibold text-sm sm:text-base bg-white transition cursor-pointer`}
-                                        >
+                                                text-[#371A70] hover:bg-yellow-300 px-3 py-1 sm:px-4 sm:py-2 
+                                                font-semibold text-sm sm:text-base bg-white transition cursor-pointer`}
+                                                >
                                             <option value="modernProfessional">
                                                 Professional
                                             </option>
@@ -223,11 +223,10 @@ function Layout({ isCustom = false }) {
                                     <button
                                         key={tab}
                                         onClick={() => setActiveTab(tab)}
-                                        className={`px-3 py-2 rounded-t-md text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
-                                            activeTab === tab
+                                        className={`px-3 py-2 rounded-t-md text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${activeTab === tab
                                                 ? "bg-white border border-b-0 border-gray-300 text-black"
                                                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                                        }`}
+                                            }`}
                                     >
                                         {tab}
                                     </button>
@@ -252,9 +251,8 @@ function Layout({ isCustom = false }) {
 
                     {/* Preview Panel */}
                     <div
-                        className={`${
-                            !previewMode && isMobile ? "hidden" : ""
-                        }`}
+                        className={`${!previewMode && isMobile ? "hidden" : ""
+                            }`}
                     >
                         <Card className="p-2 sm:p-6 flex justify-center items-start overflow-auto">
                             <div
